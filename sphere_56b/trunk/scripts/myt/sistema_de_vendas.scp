@@ -310,18 +310,18 @@ return <LOCAL.totalPrice>
 
 [FUNCTION vendor_sellNpcItem]
 REF2=<argv[0]>
-
 if !(<DB.connected>)
     src.sysmessage Erro. O item nao foi colocado a venda.
     return 0
 endif
 
 //create npc vendorbox if doesnt exist
-REF1=<findlayer.layer_vendor_extra>
+//!!ATENÇÃO!! Qualquer item jogado na layer_vendor_extra de um NPC some na hora. A única segura é a layer_bankbox.
+REF1=<findlayer.layer_bankbox>
 if !<REF1>
     SERV.NEWITEM i_bankbox
-    NEW.layer=layer_vendor_extra
-    NEW.cont=<uid>
+	NEW.cont=<uid>
+    NEW.layer=layer_bankbox
     REF1=<NEW>
 endif
 
@@ -337,7 +337,6 @@ REF2.TRIGGER @Sell
 
 //insert item into DB
 DB.EXECUTE "INSERT INTO vendorItems SET timestamp=NOW(),idVendor=<eval <uid>>,idPlayer=<eval <uid>>,idItem=<eval <REF2>>,quantity=<eval <REF2.amount>>,price=(<eval <argv[1]>>/<eval <REF2.amount>>),playerName='<DB.ESCAPEDATA <name>>',itemType=<eval <TAG.vendor_type>>,defName='<REF2.baseid>',itemName='<DB.ESCAPEDATA <REF2.name>>';"
-
 return 1
 
 //*****************************************************************************
@@ -1243,7 +1242,7 @@ on=0 Vendedor de Alimentos
     return 1
 
 on=0 Vendedor de Marcenaria e Tinker
-    SRC.CTAG.vendor_newNpcType = <eval vendor_type_misc>    //t_clock, t_musical, t_carpentry, t_chair,t_sextant, t_table, t_scissors, t_fish_pole, t_shaft, t_sewing_kit, t_tinker_tools, t_mortar, t_cadeado, t_fechadura
+    SRC.CTAG.vendor_newNpcType = <eval vendor_type_misc>    //t_clock, t_musical, t_carpentry, t_normal,t_sextant, t_table, t_scissors, t_fish_pole, t_shaft, t_sewing_kit, t_tinker_tools, t_mortar, t_cadeado, t_fechadura
     menu m_vendor_npcGender
     return 1
 
@@ -1625,7 +1624,7 @@ DEFNAME=C_H_VENDOR
 NAME=#NAMES_HUMANMALE
 ID=C_MAN
 DESIRES=i_gold,e_notoriety
-AVERSIONS=t_TRAP,t_eerie_stuff
+AVERSIONS=t_TRAP
 
 TSPEECH=jobVENDOR
 
@@ -1679,7 +1678,7 @@ DEFNAME=C_H_VENDOR_F
 NAME=#NAMES_HUMANFEMALE
 ID=C_WOMAN
 DESIRES=i_gold,e_notoriety
-AVERSIONS=t_TRAP,t_eerie_stuff
+AVERSIONS=t_TRAP
 
 TSPEECH=jobVENDOR
 
@@ -1729,7 +1728,7 @@ DEFNAME=c_o_vendor_m
 NAME=#NAMES_HUMANMALE
 ID=C_MAN
 DESIRES=i_gold,e_notoriety
-AVERSIONS=t_TRAP,t_eerie_stuff
+AVERSIONS=t_TRAP
 
 
 TSPEECH=jobVENDOR
@@ -1780,7 +1779,7 @@ ID=c_woman
 DEFNAME=c_e_vendor_f
 NAME=#NAMES_HUMANFEMALE
 DESIRES=i_gold,e_notoriety
-AVERSIONS=t_TRAP,t_eerie_stuff
+AVERSIONS=t_TRAP
 
 
 TSPEECH=jobVENDOR
@@ -1830,7 +1829,7 @@ ID=c_man
 DEFNAME=c_d_vendor_m
 NAME=#NAMES_HUMANMALE
 DESIRES=i_gold,e_notoriety
-AVERSIONS=t_TRAP,t_eerie_stuff
+AVERSIONS=t_TRAP
 
 
 TSPEECH=jobVENDOR
